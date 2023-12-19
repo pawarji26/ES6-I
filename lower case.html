@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>String Converter</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #converter-container {
+      text-align: center;
+      border: 2px soild red ;
+      padding: 10px 20px;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    button {
+      font-size: 1em;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color:goldenrod;
+    }
+  </style>
+</head>
+<body>
+
+<div id="converter-container">
+  <label for="inputString">Enter a word:</label>
+  <input type="text" id="inputString" placeholder="Type a word">
+  <br>
+  <br>
+  <button id="convertButton">Convert </button>
+  <p id="result"></p>
+</div>
+
+<script>
+const toLowerCase = char => char.toLowerCase();
+const wordToLowerCase = word => word.split('').map(toLowerCase).join('');
+
+document.getElementById('convertButton').addEventListener('click', function() {
+  const inputString = document.getElementById('inputString').value;
+  const resultElement = document.getElementById('result');
+  const result = wordToLowerCase(inputString);
+  resultElement.textContent = `Result: ${result}`;
+});
+</script>
+
+</body>
+</html>

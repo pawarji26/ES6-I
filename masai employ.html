@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masai Employee Records</title>
+    <style>
+      /* Basic styling for the body and headings */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333333;
+        margin: 20px 0;
+      }
+
+      /* Styling for the navigation bar */
+      .navbar {
+        overflow: hidden;
+        background-color: #333;
+      }
+
+      .navbar a {
+        float: left;
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+      }
+
+      .navbar a:hover {
+        background-color: #ddd;
+        color: black;
+      }
+
+      /* Styling for the form */
+      form {
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #c73030;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+
+      input, select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        border: none;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #0056b3;
+      }
+
+      /* Styling for the table */
+      table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+        background-color: #fff;
+      }
+
+      th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #007bff;
+        color: #fff;
+      }
+
+      /* Styling for the delete button */
+      button {
+        background-color: #dc3545;
+        color: #fff;
+        padding: 8px;
+        cursor: pointer;
+        border: none;
+        border-radius: 4px;
+      }
+
+      button:hover {
+        background-color: #c82333;
+      }
+
+      /* Container for the main content */
+      .container {
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Masai Employee Records</h1>
+    
+    <!-- Navigation Bar -->
+    <div class="navbar">
+      <a href="javascript:showForm('signup')">Signup</a>
+      <a href="javascript:showForm('login')">Login</a>
+      <a href="javascript:showForm('employeeRecords')">Employee Records</a>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+      <!-- Signup Form -->
+      <div id="signup" style="display: block;">
+        <form id="signupForm">
+          <h2>Signup</h2>
+          <label for="signupName">Name</label>
+          <input id="signupName" type="text" placeholder="Enter Name" required>
+          <label for="signupRole">Role</label>
+          <select id="signupRole" required>
+            <option value="Employee">Employee</option>
+            <option value="HR">HR</option>
+          </select>
+          <label for="signupPassword">Password</label>
+          <input id="signupPassword" type="password" placeholder="Enter Password" required>
+          <input type="submit" value="Signup">
+        </form>
+      </div>
+
+      <!-- Login Form -->
+      <div id="login" style="display: none;">
+        <form id="loginForm">
+          <h2>Login</h2>
+          <label for="loginName">Name</label>
+          <input id="loginName" type="text" placeholder="Enter Name" required>
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" placeholder="Enter Password" required>
+          <input type="submit" value="Login">
+        </form>
+      </div>
+
+      <!-- Employee Records Section -->
+      <div id="employeeRecords" style="display: none;">
+        <form id="employeeForm" style="display: none;">
+          <h2>Add Employee</h2>
+          <label for="name">Employee Name</label>
+          <input id="name" type="text" placeholder="Enter Employee Name">
+          <label for="employeeID">Employee ID</label>
+          <input id="employeeID" type="number" placeholder="Enter Employee ID">
+          <label for="department">Department</label>
+          <select id="department">
+            <option value="">Select Department</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+            <option value="Operations">Operations</option>
+            <option value="HR">HR</option>
+            <option value="IA">IA</option>
+          </select>
+          <label for="exp">Experience</label>
+          <input id="exp" type="number" placeholder="Experience in Years">
+          <label for="email">Email Address</label>
+          <input type="text" id="email" placeholder="Enter Email Address">
+          <label for="mbl">Mobile Number</label>
+          <input id="mbl" type="number" placeholder="Enter Mobile number">
+          <input type="submit" value="Add Employee">
+        </form>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Employee ID</th>
+              <th>Department</th>
+              <th>Experience in years</th>
+              <th>Email address</th>
+              <th>Mobile Number</th>
+              <th>Role</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody id="employeeTableBody">
+            <!-- Data will be appended here dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      // Function to switch between forms
+      function showForm(formId) {
+        document.getElementById('signup').style.display = formId === 'signup' ? 'block' : 'none';
+        document.getElementById('login').style.display = formId === 'login' ? 'block' : 'none';
+        document.getElementById('employeeRecords').style.display = formId === 'employeeRecords' ? 'block' : 'none';
+      }
+
+      // Show signup form initially
+      showForm('signup');
+
+      // Signup form submission
+      document.getElementById('signupForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('signupName').value;
+        const role = document.getElementById('signupRole').value;
+        const password = document.getElementById('signupPassword').value;
+
+        const user = { name, role, password };
+        localStorage.setItem(name, JSON.stringify(user));
+        alert('Signup successful! Please login.');
+        showForm('login');
+      });
+
+      // Login form submission
+      document.getElementById('loginForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('loginName').value;
+        const password = document.getElementById('loginPassword').value;
+
+        const user = JSON.parse(localStorage.getItem(name));
+        if (user && user.password === password) {
+          sessionStorage.setItem('loggedInUser', JSON.stringify(user));
+          showForm('employeeRecords');
+          if (user.role === 'HR') {
+            document.getElementById('employeeForm').style.display = 'block';
+          }
+          loadEmployeeRecords();
+        } else {
+          alert('Invalid login credentials');
+        }
+      });
+
+      // Function to calculate role based on experience
+      function getRole(experience) {
+        if (experience > 5) {
+          return 'Senior';
+        } else if (experience >= 2 && experience <= 5) {
+          return 'Junior';
+        } else {
+          return 'Fresher';
+        }
+      }
+
+      // Employee form submission
+      document.getElementById('employeeForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const employeeID = document.getElementById('employeeID').value;
+        const department = document.getElementById('department').value;
+        const experience = document.getElementById('exp').value;
+        const email = document.getElementById('email').value;
+        const mobile = document.getElementById('mbl').value;
+
+        const role = getRole(experience);
+        const employee = { name, employeeID, department, experience, email, mobile, role };
+        let employees = JSON.parse(localStorage.getItem('employees')) || [];
+        employees.push(employee);
+        localStorage.setItem('employees', JSON.stringify(employees));
+
+        loadEmployeeRecords();
+        document.getElementById('employeeForm').reset();
+      });
+
+      // Function to load employee records
+      function loadEmployeeRecords() {
+        const employees = JSON.parse(localStorage.getItem('employees')) || [];
+        const tableBody = document.getElementById('employeeTableBody');
+        tableBody.innerHTML = '';
+
+        employees.forEach(employee => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${employee.name}</td>
+            <td>${employee.employeeID}</td>
+            <td>${employee.department}</td>
+            <td>${employee.experience}</td>
+            <td>${employee.email}</td>
+            <td>${employee.mobile}</td>
+            <td>${employee.role}</td>
+            <td><button onclick="deleteRow('${employee.employeeID}')">Delete</button></td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      // Function to delete a row
+      window.deleteRow = function (employeeID);

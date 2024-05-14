@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #app {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+        }
+        #todo-container {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0 0 0;
+            max-height: 70vh; /* Ensure some space above the bottom */
+            overflow-y: auto; /* Add scrollbar if needed */
+        }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            background: #fff;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .todo-item:hover {
+            background: #f9f9f9;
+            transform: translateX(5px); /* Slight move on hover */
+        }
+        .completed {
+            text-decoration: line-through;
+            color: rgb(128, 128, 128);
+        }
+        .checkbox {
+            margin-right: 10px;
+        }
+        .title {
+            flex-grow: 1; /* Ensure title takes remaining space */
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Todo List</h1>
+        <ul id="todo-container"></ul>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const apiUrl = 'https://jsonplaceholder.typicode.com/todos';
+        const container = document.getElementById('todo-container');
+
+        const fetchTodos = async () => {
+            try {
+                const response = await fetch(apiUrl);
+                const todos = await response.json();
+                displayTodos(todos);
+            } catch (error) {
+                console.error('Error fetching todos:', error);
+            }
+        };
+
+        const displayTodos = (todos) => {
+            container.innerHTML = '';
+            todos.forEach(todo => {
+                const listItem = document.createElement('li');
+                listItem.className = 'todo-item';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'checkbox';
+                checkbox.checked = todo.completed;
+                checkbox.addEventListener('change', () => {
+                    if (checkbox.checked) {
+                        listItem.classList.add('completed');
+                    } else {
+                        listItem.classList.remove('completed');
+                    }
+                });
+
+                const title = document.createElement('span');
+                title.className = 'title';
+                title.textContent = todo.title;
+                if (todo.completed) {
+                    listItem.classList.add('completed');
+                }
+
+                listItem.appendChild(checkbox);
+                listItem.appendChild(title);
+                container.appendChild(listItem);
+            });
+        };
+
+        fetchTodos();
+    });
+    </script>
+</body>
+</html>

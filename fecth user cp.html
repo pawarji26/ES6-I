@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        #userContainer {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+        }
+
+        #userContainer img {
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-card img {
+            width: 80px;
+            height: 80px;
+            margin-right: 20px;
+        }
+
+        .user-details {
+            text-align: left;
+        }
+
+        .user-details h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .user-details p {
+            margin: 5px 0;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="userContainer">
+        <button onclick="fetchDataAndProcess()">Fetch Users</button>
+        <div id="userData"></div>
+    </div>
+
+    <script>
+        const baseURL = "https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-users";
+
+        async function getUsersData() {
+            try {
+                const response = await fetch(baseURL);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                return { error: `Error: ${error.message}` };
+            }
+        }
+
+        function splitData({ data, totalPages }) {
+            const [data1, data2, ...data3] = data;
+            return { totalPages, data1, data2, data3 };
+        }
+
+        function updateHTML(content) {
+            document.getElementById("userData").innerHTML = `
+                <p>Total Pages: ${content.totalPages}</p>
+                <p>Data 1: ${JSON.stringify(content.data1)}</p>
+                <p>Data 2: ${JSON.stringify(content.data2)}</p>
+            `;
+        }
+
+        function displayUsers(users) {
+            const userDataDiv = document.getElementById('userData');
+            userDataDiv.innerHTML = '';
+
+            users.forEach(user => {
+                const userDiv = document.createElement('div');
+                userDiv.className = 'user-card';
+                userDiv.innerHTML = `
+                    <img src="${user.avatar}" alt="User Avatar">
+                    <div class="user-details">
+                        <h3>${user.first_name} ${user.last_name}</h3>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                        <p><strong>Country:</strong> ${user.country}</p>
+                    </div>
+                `;
+                userDataDiv.appendChild(userDiv);
+            });
+        }
+
+        async function fetchDataAndProcess() {
+            const userData = await getUsersData();
+
+            if (userData.error) {
+                console.error(userData.error);
+            } else {
+                const result = splitData(userData);
+                console.log(result);
+                updateHTML(result);
+                displayUsers(result.data3);
+            }
+        }
+    </script>
+</body>
+</html>

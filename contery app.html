@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Info App</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    width: 100%;
+}
+
+#sort-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+}
+
+#country-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    width: 100%;
+}
+
+.country-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    padding: 15px;
+    width: 300px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.country-card h2 {
+    margin-top: 0;
+}
+
+.country-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Country Information</h1>
+        <button id="sort-btn">Sort by Population (Desc)</button>
+    </header>
+    <main id="country-container">
+        <!-- Country cards will be appended here -->
+        <div id="country-container"></div>
+<button id="sort-btn">Sort by Population (Desc)</button>
+
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const apiUrl = 'https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-countries';
+    const container = document.getElementById('country-container');
+    const sortBtn = document.getElementById('sort-btn');
+
+    let countries = [];
+    let isSorted = false;
+
+    const fetchCountries = async (sorted = false) => {
+        try {
+            const response = await fetch(`${apiUrl}${sorted ? '?sort=population&order=desc' : ''}`);
+            const data = await response.json();
+            countries = data.data;
+            displayCountries(countries);
+        } catch (error) {
+            console.error('Error fetching countries:', error);
+        }
+    };
+
+    const displayCountries = (countries) => {
+        container.innerHTML = '';
+        countries.forEach(country => {
+            const card = document.createElement('div');
+            card.className = 'country-card';
+            card.innerHTML = `
+                <img src="${country.flag}" alt="Flag of ${country.name}">
+                <h2>${country.name}</h2>
+                <p>Population: ${country.population}</p>
+                <p>Region: ${country.region}</p>
+                <p>Capital: ${country.capital}</p>
+            `;
+            container.appendChild(card);
+        });
+    };
+
+    sortBtn.addEventListener('click', () => {
+        isSorted = !isSorted;
+        fetchCountries(isSorted);
+        sortBtn.textContent = isSorted ? 'Sort by Population (Asc)' : 'Sort by Population (Desc)';
+    });
+
+    fetchCountries();
+});
+
+    </script>
+</body>
+</html>
